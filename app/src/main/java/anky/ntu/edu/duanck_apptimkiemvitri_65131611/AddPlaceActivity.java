@@ -1,14 +1,21 @@
 package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
 
+import static anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.MapsActivity.LOCATION_REQUEST_CODE;
+
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.Place;
 
 public class AddPlaceActivity extends AppCompatActivity {
     private EditText name, desc;

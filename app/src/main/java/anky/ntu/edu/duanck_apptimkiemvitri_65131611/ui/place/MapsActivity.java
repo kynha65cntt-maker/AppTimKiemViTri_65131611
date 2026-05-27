@@ -30,6 +30,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int LOCATION_REQUEST_CODE = 1;
 
+    private double selectedLat = 0.0;
+    private double selectedLng = 0.0;
+    private Marker selectedMarker; // marker đã chọn
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(v -> {
             Intent intent = new Intent(MapsActivity.this, AddPlaceActivity.class);
+
+            if (selectedLat != 0.0 || selectedLng != 0.0) {
+                intent.putExtra("selectedLat", selectedLat);
+                intent.putExtra("selectedLng", selectedLng);
+            }
+
             startActivity(intent);
         });
 
@@ -50,7 +60,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
 
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
     }
     // MAP READY
     @Override
@@ -58,6 +71,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         checkLocationPermission();
+
+        setupLongPressListener();   // thêm long press
         loadPlacesFromFirebase();
     }
     // CHECK PERMISSION
@@ -98,6 +113,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     });
         }
     }
+    //LONG PRESS CHỌN VỊ TRÍ
+    private void setupLongPressListener() {
+        mMap.setOnMapLongClickListener(latLng -> {
+
+            selectedLat = latLng.latitude;
+            selectedLng = latLng.longitude;
+
+            // Xóa marker chọn cũ nếu có
+            if (selectedMarker != null) {
+                selectedMarker.remove();
+            }
+
+            // Thêm marker mới cho vị trí được chọn
+            selectedMarker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title("Vị trí đã chọn")
+                    .snippet("Lat: " + selectedLat + ", Lng: " + selectedLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+            Toast.makeText(
+                    MapsActivity.this,
+                    "Đã chọn vị trí mới",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
+    }
     //LOAD DATA TỪ FIREBASE
     private void loadPlacesFromFirebase() {
 
@@ -110,6 +151,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 mMap.clear(); // clear marker cũ
 
+                if (selectedLat != 0.0 || selectedLng != 0.0) {
+                    LatLng selectedPos = new LatLng(selectedLat, selectedLng);
+                    selectedMarker = mMap.addMarker(new MarkerOptions()
+                            .position(selectedPos)
+                            .title("Vị trí đã chọn")
+                            .snippet("Lat: " + selectedLat + ", Lng: " + selectedLng)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
                 for (DataSnapshot data : snapshot.getChildren()) {
 
                     Place p = data.getValue(Place.class);
@@ -144,6 +193,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 enableUserLocation();
+            } else {
+                Toast.makeText(this, "Bạn chưa cấp quyền vị trí", Toast.LENGTH_SHORT).show();
             }
         }
     }
