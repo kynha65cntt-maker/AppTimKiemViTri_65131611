@@ -15,6 +15,9 @@ public class AddPlaceActivity extends AppCompatActivity {
     Button btnSave;
 
     DatabaseReference database;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         database = FirebaseDatabase.getInstance().getReference("Places");
         btnSave.setOnClickListener(v -> savePlace());
+
     }
     private void savePlace() {
         String id = databse.push().getKey();
