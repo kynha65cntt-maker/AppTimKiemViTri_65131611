@@ -1,7 +1,8 @@
 package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
 
-import static anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.MapsActivity.LOCATION_REQUEST_CODE;
+import static anky.ntu.edu.duanck_apptimkiemvitri_65131611.MapsActivity.LOCATION_REQUEST_CODE;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
@@ -11,9 +12,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
 
 import anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.Place;
 
@@ -40,6 +39,18 @@ public class AddPlaceActivity extends AppCompatActivity {
         txtLocation = findViewById(R.id.txtLocation);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         database = FirebaseDatabase.getInstance().getReference("Places");
+
+        double intentLat = getIntent().getDoubleExtra("selectedLat", 0.0);
+        double intentLng = getIntent().getDoubleExtra("selectedLng", 0.0);
+
+        if (intentLat != 0.0 || intentLng != 0.0) {
+            currentLat = intentLat;
+            currentLng = intentLng;
+            txtLocation.setText("Vị trí được chọn từ bản đồ:\nLatitude: " + currentLat + "\nLongitude: " + currentLng);
+        } else {
+            getCurrentLocation();
+        }
+
         btnSave.setOnClickListener(v -> savePlace());
 
     }
@@ -63,7 +74,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 currentLat = location.getLatitude();
                 currentLng = location.getLongitude();
 
-                txtLocation.setText("Latitude: " + currentLat + "\nLongitude: " + currentLng);
+                txtLocation.setText("Vị trí GPS hiện tại:\nLatitude: " + currentLat + "\nLongitude: " + currentLng);
             } else {
                 txtLocation.setText("Không lấy được vị trí. Hãy bật GPS và thử lại.");
             }
@@ -71,7 +82,6 @@ public class AddPlaceActivity extends AppCompatActivity {
                 txtLocation.setText("Lỗi lấy vị trí: " + e.getMessage())
         );
     }
-
     private void savePlace() {
 
         String placeName = name.getText().toString().trim();
@@ -106,9 +116,8 @@ public class AddPlaceActivity extends AppCompatActivity {
                     .addOnFailureListener(e ->
                             Toast.makeText(this, "Lỗi lưu dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                     );
+            }
         }
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -123,5 +132,4 @@ public class AddPlaceActivity extends AppCompatActivity {
             }
         }
     }
-
 }

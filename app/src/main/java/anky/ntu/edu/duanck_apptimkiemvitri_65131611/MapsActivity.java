@@ -1,9 +1,8 @@
-package anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place;
+package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -19,7 +18,6 @@ import com.google.android.gms.maps.model.*;
 
 import com.google.firebase.database.*;
 
-import anky.ntu.edu.duanck_apptimkiemvitri_65131611.R;
 import anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.Place;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
