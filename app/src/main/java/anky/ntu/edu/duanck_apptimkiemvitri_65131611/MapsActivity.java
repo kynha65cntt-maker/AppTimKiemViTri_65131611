@@ -11,9 +11,20 @@ import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import android.location.Location;
+
+import anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.Place;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
 
+    FusedLocationProviderClient fusedLocationClient;
     private GoogleMap mMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,20 +33,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
 
-    @ Override
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        LatLng myLocation = new LatLng(10.762622, 106.660172);
-        mMap.addMarker(new MarkerOptions().position(myLocation).title("My Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+
+                        LatLng myLocation = new LatLng(
+                                location.getLatitude(),
+                                location.getLongitude()
+                        );
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17));
+                        mMap.addMarker(new MarkerOptions()
+                                .position(myLocation)
+                                .title("Your Location"));
+                    }
+                });
     }
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference("places");
-
-    database.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
             for (DataSnapshot data : snapshot.getChildren()) {
@@ -45,10 +73,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions().position(loc).title(p.name));
             }
         }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        @Override
+        if (requestCode == 1 && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            recreate(); // reload lại activity
+        }
+    }
+
+    @Override
         public void onCancelled(DatabaseError error) {
 
         }
-    });
 }
