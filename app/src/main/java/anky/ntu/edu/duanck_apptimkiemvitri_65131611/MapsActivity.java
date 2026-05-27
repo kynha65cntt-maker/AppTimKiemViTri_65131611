@@ -33,4 +33,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(myLocation).title("My Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
     }
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("places");
+
+    database.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            for (DataSnapshot data : snapshot.getChildren()) {
+                Place p = data.getValue(Place.class);
+
+                LatLng loc = new LatLng(p.latitude, p.longitude);
+                mMap.addMarker(new MarkerOptions().position(loc).title(p.name));
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError error) {
+
+        }
+    });
 }
