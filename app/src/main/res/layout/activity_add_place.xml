@@ -14,7 +14,6 @@
         android:padding="24dp"
         android:background="#F5F5F5">
 
-        <!-- Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +30,6 @@
             android:layout_height="wrap_content"
             android:hint="Place Name"
             android:padding="12dp"
-            android:background="@android:drawable/edit_text"
             android:layout_marginBottom="16dp"/>
 
         <!-- Description -->
@@ -41,7 +39,15 @@
             android:layout_height="wrap_content"
             android:hint="Description"
             android:padding="12dp"
-            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/txtLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đang lấy vị trí..."
+            android:textSize="16sp"
+            android:textColor="#333333"
             android:layout_marginBottom="24dp"/>
 
         <!-- Save Button -->

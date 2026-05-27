@@ -41,15 +41,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DuAnCK_AppTimKiemViTri_65131611">
 
-        <activity
-            android:name=".MainActivity2"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".AddPlaceActivity"
             android:exported="true">
@@ -61,15 +53,6 @@
         </activity>
         <activity
             android:name=".MapsActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activity_map"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -10,11 +10,11 @@ public class PlaceViewModel extends ViewModel {
 
         public Place() {}
 
-        public Place(String name, String description, double lat, double lng) {
+        public Place(String name, String description, double latitude, double  longitude) {
             this.name = name;
             this.description = description;
-            this.latitude = lat;
-            this.longitude = lng;
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
     }
 }

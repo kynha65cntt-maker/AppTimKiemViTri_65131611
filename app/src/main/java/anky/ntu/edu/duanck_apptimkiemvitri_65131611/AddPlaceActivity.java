@@ -11,12 +11,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class AddPlaceActivity extends AppCompatActivity {
-    EditText name, desc;
-    Button btnSave;
+    private EditText name, desc;
+    private Button btnSave;
+    private textView txtLocation;
+    private DatabaseReference database;
 
-    DatabaseReference database;
+    private FusedLocationProviderClient fusedLocationClient;
 
-
+    private double currentLat = 0.0;
+    private double currentLng = 0.0;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +30,91 @@ public class AddPlaceActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         desc = findViewById(R.id.desc);
         btnSave = findViewById(R.id.btnSave);
+        txtLocation = findViewById(R.id.txtLocation);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         database = FirebaseDatabase.getInstance().getReference("Places");
         btnSave.setOnClickListener(v -> savePlace());
 
     }
-    private void savePlace() {
-        String id = databse.push().getKey();
-        Place place = new Place(id, name.getText().toString(), desc.getText().toString());
-        databae.child(id).setValue(place);
+
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_REQUEST_CODE
+            );
+            return;
+        }
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                currentLat = location.getLatitude();
+                currentLng = location.getLongitude();
+
+                txtLocation.setText("Latitude: " + currentLat + "\nLongitude: " + currentLng);
+            } else {
+                txtLocation.setText("Không lấy được vị trí. Hãy bật GPS và thử lại.");
+            }
+        }).addOnFailureListener(e ->
+                txtLocation.setText("Lỗi lấy vị trí: " + e.getMessage())
+        );
     }
+
+    private void savePlace() {
+
+        String placeName = name.getText().toString().trim();
+        String placeDesc = desc.getText().toString().trim();
+
+        if (placeName.isEmpty()) {
+            name.setError("Nhập tên địa điểm");
+            name.requestFocus();
+            return;
+        }
+
+        if (placeDesc.isEmpty()) {
+            desc.setError("Nhập mô tả");
+            desc.requestFocus();
+            return;
+        }
+
+        if (currentLat == 0.0 && currentLng == 0.0) {
+            Toast.makeText(this, "Chưa lấy được GPS thật. Hãy bật vị trí và thử lại.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String id = database.push().getKey();
+        Place place = new Place(placeName, placeDesc, currentLat, currentLng);
+
+        if (id != null) {
+            database.child(id).setValue(place)
+                    .addOnSuccessListener(unused -> {
+                        Toast.makeText(this, "Lưu địa điểm thành công", Toast.LENGTH_SHORT).show();
+                        finish(); // quay về map
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Lỗi lưu dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "Bạn chưa cấp quyền vị trí", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
