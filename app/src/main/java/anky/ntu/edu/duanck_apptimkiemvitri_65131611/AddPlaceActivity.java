@@ -46,7 +46,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         if (intentLat != 0.0 || intentLng != 0.0) {
             currentLat = intentLat;
             currentLng = intentLng;
-            txtLocation.setText("Vị trí được chọn từ bản đồ:\nLatitude: " + currentLat + "\nLongitude: " + currentLng);
+            txtLocation.setText("Tọa độ được chọn:\nLat = " + currentLat + "\nLng = " + currentLng);
         } else {
             getCurrentLocation();
         }
@@ -74,7 +74,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 currentLat = location.getLatitude();
                 currentLng = location.getLongitude();
 
-                txtLocation.setText("Vị trí GPS hiện tại:\nLatitude: " + currentLat + "\nLongitude: " + currentLng);
+                txtLocation.setText("Tọa độ GPS hiện tại:\nLat = " + currentLat + "\nLng = " + currentLng);
             } else {
                 txtLocation.setText("Không lấy được vị trí. Hãy bật GPS và thử lại.");
             }

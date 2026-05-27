@@ -1,5 +1,5 @@
 package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
-
+import android.widget.TextView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
+    private TextView txtGoRegister;
     EditText emailEditText;
     Button btnLogin;
     FirebaseAuth mAuth;
@@ -28,6 +29,13 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         mAuth = FirebaseAuth.getInstance();
         btnLogin.setOnClickListener(v -> loginUser());
+        txtGoRegister = findViewById(R.id.txtGoRegister);
+
+        txtGoRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
+``
     }
     private void loginUser() {
         String userEmail = emailEditText.getText().toString();

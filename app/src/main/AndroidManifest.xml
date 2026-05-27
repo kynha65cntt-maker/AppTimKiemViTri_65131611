@@ -5,28 +5,27 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <RelativeLayout
 
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
+
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
-            android:textSize="24sp"
-            android:backgroundTint="#6200EE"
-            android:textColor="#FFF"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="20dp"/>
-
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:backgroundTint="#6200EE"
+            android:text="+"
+            android:textColor="#FFF"
+            android:textSize="24sp" />
     </RelativeLayout>
 
     <application
@@ -38,8 +37,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DuAnCK_AppTimKiemViTri_65131611">
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".AddPlaceActivity"
             android:exported="true">

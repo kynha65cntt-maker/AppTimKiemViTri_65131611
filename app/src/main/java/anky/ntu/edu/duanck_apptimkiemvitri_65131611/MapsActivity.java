@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
-
+import com.google.firebase.auth.FirebaseAuth;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -23,6 +23,7 @@ import anky.ntu.edu.duanck_apptimkiemvitri_65131611.ui.place.Place;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Button btnLogout;
     private FusedLocationProviderClient fusedLocationClient;
     private Button btnAdd;
 
@@ -49,8 +50,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 intent.putExtra("selectedLat", selectedLat);
                 intent.putExtra("selectedLng", selectedLng);
             }
+            btnLogout = findViewById(R.id.btnLogout);
 
-            startActivity(intent);
+            btnLogout.setOnClickListener(v -> {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MapsActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            });
         });
 
         //Load Map
@@ -72,6 +79,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setupLongPressListener();   // thêm long press
         loadPlacesFromFirebase();
+//        Khi bấm marker sẽ hiện:
+//        Tên địa điểm
+//        Mô tả
+        mMap.setOnMarkerClickListener(marker -> {
+            marker.showInfoWindow();
+            return false;
+        });
     }
     // CHECK PERMISSION
     private void checkLocationPermission() {
@@ -196,4 +210,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mMap != null) {
+            loadPlacesFromFirebase();
+        }
+    }
+
 }
