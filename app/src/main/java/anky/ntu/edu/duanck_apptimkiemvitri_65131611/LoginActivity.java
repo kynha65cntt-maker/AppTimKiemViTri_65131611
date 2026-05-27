@@ -1,10 +1,11 @@
 package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import android.content.Intent;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -25,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btnLogin);
-
         mAuth = FirebaseAuth.getInstance();
         btnLogin.setOnClickListener(v -> loginUser());
     }
@@ -37,6 +37,10 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
                         Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
                     }

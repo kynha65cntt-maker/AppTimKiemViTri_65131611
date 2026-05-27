@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DuAnCK_AppTimKiemViTri_65131611">
+        <activity android:name=".MapsActivity" />
         <activity
             android:name=".MainActivity2"
             android:exported="true">
