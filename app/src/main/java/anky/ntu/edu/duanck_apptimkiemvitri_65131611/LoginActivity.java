@@ -1,4 +1,5 @@
 package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
+import android.view.View;
 import android.widget.TextView;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
+    Button btnAdd = findViewById(R.id.btnAdd);
     private TextView txtGoRegister;
     EditText emailEditText;
     Button btnLogin;
@@ -24,8 +26,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
+        View email = findViewById(R.id.email);
+        View password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btnLogin);
         mAuth = FirebaseAuth.getInstance();
         btnLogin.setOnClickListener(v -> loginUser());
@@ -35,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
-``
     }
     private void loginUser() {
         String userEmail = emailEditText.getText().toString();
