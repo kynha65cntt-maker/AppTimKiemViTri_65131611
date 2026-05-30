@@ -1,5 +1,7 @@
 package anky.ntu.edu.duanck_apptimkiemvitri_65131611;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -22,6 +24,5 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
-    }
 }
+
